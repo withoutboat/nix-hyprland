@@ -39,7 +39,6 @@
         enable = true;
         package = hyprlandPkg;
         portalPackage = portalPkg;
-        #withUWSM = true;
         systemd.enable = false;
       };
 
