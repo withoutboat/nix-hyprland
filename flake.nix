@@ -70,18 +70,15 @@
       services.awww.enable = true;
 
       xdg.configFile = {
-        "hypr/hyprland.lua".source = ./lua/hyprland.lua;
-        "hypr/monitors.lua".source = ./lua/monitors.lua;
-        "hypr/settings.lua".source = ./lua/settings.lua;
-        "hypr/animations.lua".source = ./lua/animations.lua;
-        "hypr/binds.lua".source = ./lua/binds.lua;
-        "hypr/rules.lua".source = ./lua/rules.lua;
-
-        "hypr/icons" = {
-          source = ./icons;
-          recursive = true;
-        };
+      "hypr" = {
+        source = ./lua;
+        recursive = true;
       };
-    };
+    
+      "hypr/icons" = {
+        source = ./icons;
+        recursive = true;
+      };
+    }; 
   };
 }

@@ -1,5 +1,4 @@
 require("monitors")
-require("variables")
 require("settings")
 require("animations")
 require("binds")
