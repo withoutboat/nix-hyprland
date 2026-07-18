@@ -17,7 +17,7 @@
     term = "${pkgs.ghostty}/bin/ghostty"
     browser = "${pkgs.firefox}/bin/firefox"
     editor = "${pkgs.vim}/bin/vim"
-    fileManager = "${pkgs.xfce.thunar}/bin/thunar"
+    fileManager = "${pkgs.thunar}/bin/thunar"
     fileManagerScript = ""
     
     -- Shell Toggles
