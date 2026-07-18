@@ -25,7 +25,7 @@
         hyprlock      # Screen locker
         hypridle      # Idle management
         waybar        # Status bar
-        woofi          # Application launcher
+        wofi          # Application launcher
         mako          # Notification daemon
         wl-clipboard  # Clipboard management
         grim          # Screenshot tool
