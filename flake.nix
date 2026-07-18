@@ -15,7 +15,7 @@
     in
     {
       imports = [
-        ./spec.nix 
+        ./modules/spec.nix 
       ];
 
       home.packages = with pkgs; [
