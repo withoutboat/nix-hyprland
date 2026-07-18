@@ -40,7 +40,7 @@
         package = hyprlandPkg;
         portalPackage = portalPkg;
         #withUWSM = true;
-        systemd.variables = ["--all"];
+        systemd.enable = false;
       };
 
       systemd.user.services.hyprpolkitagent = {
