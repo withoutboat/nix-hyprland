@@ -16,7 +16,7 @@
     -- Applications (Direct paths from Nix Store to bypass global path dependency)
     term = "${pkgs.ghostty}/bin/ghostty"
     browser = "${pkgs.firefox}/bin/firefox"
-    editor = "${pkgs.vscode}/bin/code"
+    editor = "${pkgs.vim}/bin/vim"
     fileManager = "${pkgs.xfce.thunar}/bin/thunar"
     fileManagerScript = ""
     

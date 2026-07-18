@@ -1,17 +1,11 @@
--- ==========================================
--- SPECIFICATION & DEFAULT VARIABLES
--- ==========================================
--- These variables are typically injected by NixOS/Home Manager.
--- We set safe fallbacks here in case they are evaluated standalone.
-
-global.kbdLayout = global.kbdLayout or "us"
-global.kbdVariant = global.kbdVariant or ""
-global.capslockAsESC = global.capslockAsESC or false
-
 -- Helper function to wrap commands with UWSM cgroups execution
 local function app(cmd)
   return "uwsm app -- " .. cmd
 end
+
+kbdLayout = kbdLayout or "us"
+kbdVariant = kbdVariant or ""
+if capslockAsESC == nil then capslockAsESC = false end
 
 -- ==========================================
 -- ENVIRONMENT & ASSETS
