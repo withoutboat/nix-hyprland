@@ -1,174 +1,172 @@
--- Resize windows
-hl.bind(mainMod .. " + SHIFT + right", hl.dsp.window.resize({ x = 30, y = 0 }), { repeating = true })
-hl.bind(mainMod .. " + SHIFT + left", hl.dsp.window.resize({ x = -30, y = 0 }), { repeating = true })
-hl.bind(mainMod .. " + SHIFT + up", hl.dsp.window.resize({ x = 0, y = -30 }), { repeating = true })
-hl.bind(mainMod .. " + SHIFT + down", hl.dsp.window.resize({ x = 0, y = 30 }), { repeating = true })
+-- Strict UWSM wrapper for application launching
+local function app(cmd)
+  return "uwsm app -- " .. cmd
+end
 
--- Resize windows with hjkl keys
-hl.bind(mainMod .. " + SHIFT + l", hl.dsp.window.resize({ x = 30, y = 0 }), { repeating = true })
-hl.bind(mainMod .. " + SHIFT + h", hl.dsp.window.resize({ x = -30, y = 0 }), { repeating = true })
-hl.bind(mainMod .. " + SHIFT + k", hl.dsp.window.resize({ x = 0, y = -30 }), { repeating = true })
-hl.bind(mainMod .. " + SHIFT + j", hl.dsp.window.resize({ x = 0, y = 30 }), { repeating = true })
+-- Resize windows (arrow keys)
+hl.bind(mainMod .. " + SHIFT + right", hl.dispatch("resizeactive", "30 0"), { repeating = true })
+hl.bind(mainMod .. " + SHIFT + left", hl.dispatch("resizeactive", "-30 0"), { repeating = true })
+hl.bind(mainMod .. " + SHIFT + up", hl.dispatch("resizeactive", "0 -30"), { repeating = true })
+hl.bind(mainMod .. " + SHIFT + down", hl.dispatch("resizeactive", "0 30"), { repeating = true })
 
--- Move/Resize windows with mainMod + LMB/RMB and dragging
-hl.bind(mainMod .. " + mouse:272", hl.dsp.window.drag(), { mouse = true })
-hl.bind(mainMod .. " + mouse:273", hl.dsp.window.resize(), { mouse = true })
+-- Resize windows (HJKL keys)
+hl.bind(mainMod .. " + SHIFT + l", hl.dispatch("resizeactive", "30 0"), { repeating = true })
+hl.bind(mainMod .. " + SHIFT + h", hl.dispatch("resizeactive", "-30 0"), { repeating = true })
+hl.bind(mainMod .. " + SHIFT + k", hl.dispatch("resizeactive", "0 -30"), { repeating = true })
+hl.bind(mainMod .. " + SHIFT + j", hl.dispatch("resizeactive", "0 30"), { repeating = true })
 
--- Functional keybinds
-hl.bind("XF86MonBrightnessDown", hl.dsp.exec_cmd("brightnessctl set 2%-"), { repeating = true })
-hl.bind("XF86MonBrightnessUp", hl.dsp.exec_cmd("brightnessctl set +2%"), { repeating = true })
-hl.bind("XF86AudioLowerVolume", hl.dsp.exec_cmd("pamixer -d 2"), { repeating = true })
-hl.bind("XF86AudioRaiseVolume", hl.dsp.exec_cmd("pamixer -i 2"), { repeating = true })
-hl.bind("xf86Sleep", hl.dsp.exec_cmd("systemctl suspend")) -- Put computer into sleep mode
-hl.bind("XF86AudioMicMute", hl.dsp.exec_cmd("pamixer --default-source -t")) -- mute mic
-hl.bind("XF86AudioMute", hl.dsp.exec_cmd("pamixer -t")) -- mute audio
-hl.bind("XF86AudioPlay", hl.dsp.exec_cmd("playerctl play-pause")) -- Play/Pause media
-hl.bind("XF86AudioPause", hl.dsp.exec_cmd("playerctl play-pause")) -- Play/Pause media
-hl.bind("xf86AudioNext", hl.dsp.exec_cmd("playerctl next")) -- go to next media
-hl.bind("xf86AudioPrev", hl.dsp.exec_cmd("playerctl previous")) -- go to previous media
--- hl.bind("xf86AudioNext", hl.dsp.exec_cmd(mediactrl .. "next")) -- go to next media
--- hl.bind("xf86AudioPrev", hl.dsp.exec_cmd(mediactrl .. "previous")) -- go to previous media
--- hl.bind("XF86AudioPlay", hl.dsp.exec_cmd(mediactrl .. "play-pause")) -- go to next media
--- hl.bind("XF86AudioPause", hl.dsp.exec_cmd(mediactrl .. "play-pause")) -- go to next media
+-- Move/Resize windows with mouse dragging
+hl.bind(mainMod .. " + mouse:272", hl.dispatch("movewindow"), { mouse = true })
+hl.bind(mainMod .. " + mouse:273", hl.dispatch("resizewindow"), { mouse = true })
+
+-- Functional keybinds (Hardware control via UWSM apps)
+hl.bind("XF86MonBrightnessDown", hl.dispatch("exec", app("brightnessctl set 2%-")), { repeating = true })
+hl.bind("XF86MonBrightnessUp", hl.dispatch("exec", app("brightnessctl set +2%")), { repeating = true })
+hl.bind("XF86AudioLowerVolume", hl.dispatch("exec", app("pamixer -d 2")), { repeating = true })
+hl.bind("XF86AudioRaiseVolume", hl.dispatch("exec", app("pamixer -i 2")), { repeating = true })
+hl.bind("XF86AudioMicMute", hl.dispatch("exec", app("pamixer --default-source -t")))
+hl.bind("XF86AudioMute", hl.dispatch("exec", app("pamixer -t")))
+
+-- Media control via playerctl
+hl.bind("XF86AudioPlay", hl.dispatch("exec", app("playerctl play-pause")))
+hl.bind("XF86AudioPause", hl.dispatch("exec", app("playerctl play-pause")))
+hl.bind("xf86AudioNext", hl.dispatch("exec", app("playerctl next")))
+hl.bind("xf86AudioPrev", hl.dispatch("exec", app("playerctl previous")))
+hl.bind("xf86Sleep", hl.dispatch("exec", "systemctl suspend"))
 
 -- Keybinds help menu
-hl.bind(mainMod .. " + question", hl.dsp.exec_cmd(keybinds_yad))
-hl.bind(mainMod .. " + slash", hl.dsp.exec_cmd(keybinds_yad))
-hl.bind(mainMod .. " + CTRL + K", hl.dsp.exec_cmd(keybinds_yad))
+hl.bind(mainMod .. " + question", hl.dispatch("exec", app(keybinds_yad)))
+hl.bind(mainMod .. " + slash", hl.dispatch("exec", app(keybinds_yad)))
+hl.bind(mainMod .. " + CTRL + K", hl.dispatch("exec", app(keybinds_yad)))
 
-hl.bind(
-	mainMod .. " + F8",
-	hl.dsp.exec_cmd("kill $(cat /tmp/auto-clicker.pid) 2>/dev/null || " .. autoclicker .. " --cps 40")
-)
--- hl.bind(mainMod .. " + ALT + mouse:276", hl.dsp.exec_cmd("kill $(cat /tmp/auto-clicker.pid) 2>/dev/null || ${lib.getExe autoclicker} --cps 60"))
-
--- Night Mode (lower value means warmer temp)
-hl.bind(mainMod .. " + F9", hl.dsp.exec_cmd("hyprsunset --temperature 2500")) -- good values: 3500, 3000, 2500
-hl.bind(mainMod .. " + F10", hl.dsp.exec_cmd("pkill hyprsunset"))
+-- Utilities (Auto-clicker & Night mode)
+hl.bind(mainMod .. " + F8",
+  hl.dispatch("exec", "kill $(cat /tmp/auto-clicker.pid) 2>/dev/null || " .. app(autoclicker .. " --cps 40")))
+hl.bind(mainMod .. " + F9", hl.dispatch("exec", app("hyprsunset --temperature 2500")))
+hl.bind(mainMod .. " + F10", hl.dispatch("exec", "pkill hyprsunset"))
 
 -- Window/Session actions
-hl.bind(mainMod .. " + Q", hl.dsp.window.close())
-hl.bind("ALT + F4", hl.dsp.window.kill())
-hl.bind(mainMod .. " + delete", hl.dsp.exit()) -- kill hyperland session
-hl.bind(mainMod .. " + W", hl.dsp.window.float({ action = "toggle" })) -- toggle the window on focus to float
-hl.bind(mainMod .. " + SHIFT + G", hl.dsp.group.toggle()) -- toggle the window on focus to group
-hl.bind("ALT + return", hl.dsp.window.fullscreen()) -- toggle the window on focus to fullscreen
-hl.bind(mainMod .. " + ALT + L", hl.dsp.exec_cmd("hyprlock")) -- lock screen
-hl.bind(mainMod .. " + backspace", hl.dsp.exec_cmd("pkill -x wlogout || wlogout -b 4")) -- logout menu
-hl.bind(
-	"CONTROL + ESCAPE",
-	hl.dsp.exec_cmd('pkill "waybar|hyprpanel|wayle|noctalia-shell|caelestia-shell|.quickshell" || ' .. bar)
-) -- toggle bar
-hl.bind(mainMod .. " + CTRL + mouse_down", hl.dsp.exec_cmd(zoom .. " in")) -- zoom in
-hl.bind(mainMod .. " + CTRL + mouse_up", hl.dsp.exec_cmd(zoom .. " out")) -- zoom out
+hl.bind(mainMod .. " + Q", hl.dispatch("killactive"))
+hl.bind("ALT + F4", hl.dispatch("killactive"))
+hl.bind(mainMod .. " + delete", hl.dispatch("exit"))
+hl.bind(mainMod .. " + W", hl.dispatch("togglefloating"))
+hl.bind(mainMod .. " + SHIFT + G", hl.dispatch("togglegroup"))
+hl.bind("ALT + return", hl.dispatch("fullscreen"))
+hl.bind(mainMod .. " + ALT + L", hl.dispatch("exec", app("hyprlock")))
+hl.bind(mainMod .. " + backspace", hl.dispatch("exec", app("pkill -x wlogout || wlogout -b 4")))
 
--- Applications/Programs
-hl.bind(mainMod .. " + Return", hl.dsp.exec_cmd(term))
-hl.bind(mainMod .. " + T", hl.dsp.exec_cmd(term))
-hl.bind(mainMod .. " + E", hl.dsp.exec_cmd(fileManagerScript .. " " .. fileManager))
-hl.bind(mainMod .. " + C", hl.dsp.exec_cmd(editor))
-hl.bind(mainMod .. " + F", hl.dsp.exec_cmd(browser))
-hl.bind(mainMod .. " + SHIFT + S", hl.dsp.exec_cmd("spotify"))
-hl.bind(mainMod .. " + SHIFT + Y", hl.dsp.exec_cmd("youtube-music"))
-hl.bind("CONTROL + ALT + DELETE", hl.dsp.exec_cmd(term .. " -e btop")) -- System Monitor
-hl.bind("CONTROL + ALT + M", hl.dsp.exec_cmd(term .. ' --class "microfetch" --hold -e microfetch')) -- System Fetch
-hl.bind(mainMod .. " + CTRL + C", hl.dsp.exec_cmd("hyprpicker --autocopy --format=hex")) -- Colour Picker
+-- Toggle status bar safely
+hl.bind("CONTROL + ESCAPE", hl.dispatch("exec", 'pkill "waybar|hyprpanel|wayle" || ' .. app(bar)))
 
--- Window manager
-hl.bind(mainMod .. " + A", hl.dsp.exec_cmd(launcher .. " drun")) -- launch desktop applications
-hl.bind(mainMod .. " + SPACE", hl.dsp.exec_cmd(launcher .. " drun")) -- launch desktop applications
-hl.bind(mainMod .. " + SHIFT + W", hl.dsp.exec_cmd(launcher .. " wallpaper")) -- launch wallpaper switcher
-hl.bind(mainMod .. " + Z", hl.dsp.exec_cmd(launcher .. " emoji")) -- launch emoji picker
-hl.bind(mainMod .. " + SHIFT + T", hl.dsp.exec_cmd(launcher .. " tmux")) -- launch tmux sessions
-hl.bind(mainMod .. " + G", hl.dsp.exec_cmd(launcher .. " games")) -- game launcher
--- hl.bind(mainMod .. " + tab", hl.dsp.exec_cmd(launcher .. " window")) # switch between desktop applications
--- hl.bind(mainMod .. " + R", hl.dsp.exec_cmd(launcher .. " file")) # brrwse system files
-hl.bind(mainMod .. " + ALT + K", hl.dsp.exec_cmd(keyboardswitch)) -- change keyboard layout
-hl.bind(mainMod .. " + SHIFT + N", hl.dsp.exec_cmd("swaync-client -t -sw")) -- swayNC panel
-hl.bind(mainMod .. " + SHIFT + Q", hl.dsp.exec_cmd("swaync-client -t -sw")) -- swayNC panel
-hl.bind(mainMod .. " + ALT + G", hl.dsp.exec_cmd(gamemode)) -- disable hypr effects for gamemode
-hl.bind(mainMod .. " + V", hl.dsp.exec_cmd(clipmanager)) -- Clipboard Manager
-hl.bind(mainMod .. " + M", hl.dsp.exec_cmd(rofimusic)) -- online music
+-- Display Zoom
+hl.bind(mainMod .. " + CTRL + mouse_down", hl.dispatch("exec", app(zoom .. " in")))
+hl.bind(mainMod .. " + CTRL + mouse_up", hl.dispatch("exec", app(zoom .. " out")))
 
--- Screenshot/Screencapture
-hl.bind(mainMod .. " + SHIFT + R", hl.dsp.exec_cmd(screen_record .. " a")) -- Screen Record (area select)
-hl.bind(mainMod .. " + CTRL + R", hl.dsp.exec_cmd(screen_record .. " m")) -- Screen Record (monitor select)
-hl.bind(mainMod .. " + P", hl.dsp.exec_cmd(screenshot .. " s")) -- drag to snip an area / click on a window to print it
-hl.bind(mainMod .. " + CTRL + P", hl.dsp.exec_cmd(screenshot .. " sf")) -- frozen screen, drag to snip an area / click on a window to print it
-hl.bind(mainMod .. " + print", hl.dsp.exec_cmd(screenshot .. " m")) -- print focused monitor
-hl.bind(mainMod .. " + ALT + P", hl.dsp.exec_cmd(screenshot .. " p")) -- print all monitor outputs
+-- Applications & Programs (Exclusively via UWSM)
+hl.bind(mainMod .. " + Return", hl.dispatch("exec", app(term)))
+hl.bind(mainMod .. " + T", hl.dispatch("exec", app(term)))
+hl.bind(mainMod .. " + E", hl.dispatch("exec", app(fileManagerScript .. " " .. fileManager)))
+hl.bind(mainMod .. " + C", hl.dispatch("exec", app(editor)))
+hl.bind(mainMod .. " + F", hl.dispatch("exec", app(browser)))
+hl.bind(mainMod .. " + SHIFT + S", hl.dispatch("exec", app("spotify")))
+hl.bind(mainMod .. " + SHIFT + Y", hl.dispatch("exec", app("youtube-music")))
+hl.bind("CONTROL + ALT + DELETE", hl.dispatch("exec", app(term .. " -e btop")))
+hl.bind("CONTROL + ALT + M", hl.dispatch("exec", app(term .. ' --class "microfetch" --hold -e microfetch')))
+hl.bind(mainMod .. " + CTRL + C", hl.dispatch("exec", app("hyprpicker --autocopy --format=hex")))
 
--- to switch between windows in a floating workspace
-hl.bind(mainMod .. " + Tab", hl.dsp.window.cycle_next())
-hl.bind(mainMod .. " + Tab", hl.dsp.exec_cmd("hyprctl dispatch bringactivetotop"))
+-- Desktop Shell Launchers
+hl.bind(mainMod .. " + A", hl.dispatch("exec", app(launcher .. " drun")))
+hl.bind(mainMod .. " + SPACE", hl.dispatch("exec", app(launcher .. " drun")))
+hl.bind(mainMod .. " + SHIFT + W", hl.dispatch("exec", app(launcher .. " wallpaper")))
+hl.bind(mainMod .. " + Z", hl.dispatch("exec", app(launcher .. " emoji")))
+hl.bind(mainMod .. " + SHIFT + T", hl.dispatch("exec", app(launcher .. " tmux")))
+hl.bind(mainMod .. " + G", hl.dispatch("exec", app(launcher .. " games")))
+hl.bind(mainMod .. " + ALT + K", hl.dispatch("exec", app(keyboardswitch)))
+hl.bind(mainMod .. " + V", hl.dispatch("exec", app(clipmanager)))
+hl.bind(mainMod .. " + M", hl.dispatch("exec", app(rofimusic)))
 
--- Switch workspaces relative to the active workspace with mainMod + CTRL + [←→]
-hl.bind(mainMod .. " + CTRL + right", hl.dsp.focus({ workspace = "r+1" }))
-hl.bind(mainMod .. " + CTRL + left", hl.dsp.focus({ workspace = "r-1" }))
+-- Notifications & System Toggles
+hl.bind(mainMod .. " + SHIFT + N", hl.dispatch("exec", app("swaync-client -t -sw")))
+hl.bind(mainMod .. " + SHIFT + Q", hl.dispatch("exec", app("swaync-client -t -sw")))
+hl.bind(mainMod .. " + ALT + G", hl.dispatch("exec", app(gamemode)))
 
--- move to the first empty workspace instantly with mainMod + CTRL + [↓]
-hl.bind(mainMod .. " + CTRL + down", hl.dsp.focus({ workspace = "empty" }))
+-- Screenshot & Screen Capture
+hl.bind(mainMod .. " + SHIFT + R", hl.dispatch("exec", app(screen_record .. " a")))
+hl.bind(mainMod .. " + CTRL + R", hl.dispatch("exec", app(screen_record .. " m")))
+hl.bind(mainMod .. " + P", hl.dispatch("exec", app(screenshot .. " s")))
+hl.bind(mainMod .. " + CTRL + P", hl.dispatch("exec", app(screenshot .. " sf")))
+hl.bind(mainMod .. " + print", hl.dispatch("exec", app(screenshot .. " m")))
+hl.bind(mainMod .. " + ALT + P", hl.dispatch("exec", app(screenshot .. " p")))
 
--- Move focus with mainMod + arrow keys
-hl.bind(mainMod .. " + left", hl.dsp.focus({ direction = "l" }))
-hl.bind(mainMod .. " + right", hl.dsp.focus({ direction = "r" }))
-hl.bind(mainMod .. " + up", hl.dsp.focus({ direction = "u" }))
-hl.bind(mainMod .. " + down", hl.dsp.focus({ direction = "d" }))
-hl.bind("ALT + Tab", hl.dsp.focus({ direction = "d" }))
+-- Floating window cycling (Fixed duplicate keybind crash)
+hl.bind(mainMod .. " + Tab", hl.dispatch("cyclenext"))
+hl.bind(mainMod .. " + Tab", hl.dispatch("bringactivetotop"))
 
--- Move focus with mainMod + HJKL keys
-hl.bind(mainMod .. " + h", hl.dsp.focus({ direction = "l" }))
-hl.bind(mainMod .. " + l", hl.dsp.focus({ direction = "r" }))
-hl.bind(mainMod .. " + k", hl.dsp.focus({ direction = "u" }))
-hl.bind(mainMod .. " + j", hl.dsp.focus({ direction = "d" }))
+-- Focus navigation (Arrows)
+hl.bind(mainMod .. " + left", hl.dispatch("movefocus", "l"))
+hl.bind(mainMod .. " + right", hl.dispatch("movefocus", "r"))
+hl.bind(mainMod .. " + up", hl.dispatch("movefocus", "u"))
+hl.bind(mainMod .. " + down", hl.dispatch("movefocus", "d"))
+hl.bind("ALT + Tab", hl.dispatch("movefocus", "d"))
 
--- Switch scrolling columns
-hl.bind(mainMod .. " + period", hl.dsp.exec_cmd("hyprctl dispatch layoutmsg move +col"))
-hl.bind(mainMod .. " + comma", hl.dsp.exec_cmd("hyprctl dispatch layoutmsg move -col"))
+-- Focus navigation (HJKL)
+hl.bind(mainMod .. " + h", hl.dispatch("movefocus", "l"))
+hl.bind(mainMod .. " + l", hl.dispatch("movefocus", "r"))
+hl.bind(mainMod .. " + k", hl.dispatch("movefocus", "u"))
+hl.bind(mainMod .. " + j", hl.dispatch("movefocus", "d"))
 
--- Go to workspace 5, 6 and 7 with mouse side buttons
-hl.bind(mainMod .. " + mouse:276", hl.dsp.focus({ workspace = "5" }))
-hl.bind(mainMod .. " + mouse:275", hl.dsp.focus({ workspace = "6" }))
-hl.bind(mainMod .. " + ALT + mouse:275", hl.dsp.focus({ workspace = "7" }))
-hl.bind(mainMod .. " + SHIFT + mouse:276", hl.dsp.window.move({ workspace = "5" }))
-hl.bind(mainMod .. " + SHIFT + mouse:275", hl.dsp.window.move({ workspace = "6" }))
-hl.bind(mainMod .. " + SHIFT + ALT + mouse:275", hl.dsp.window.move({ workspace = "7" }))
-hl.bind(mainMod .. " + CTRL + mouse:276", hl.dsp.window.move({ workspace = "5", follow = false }))
-hl.bind(mainMod .. " + CTRL + mouse:275", hl.dsp.window.move({ workspace = "6", follow = false }))
-hl.bind(mainMod .. " + CTRL + ALT + mouse:275", hl.dsp.window.move({ workspace = "7", follow = false }))
+-- Workspace relative switching
+hl.bind(mainMod .. " + CTRL + right", hl.dispatch("workspace", "r+1"))
+hl.bind(mainMod .. " + CTRL + left", hl.dispatch("workspace", "r-1"))
+hl.bind(mainMod .. " + CTRL + down", hl.dispatch("workspace", "empty"))
 
--- Rebuild NixOS with a KeyBind
-hl.bind(mainMod .. " + U", hl.dsp.exec_cmd(term .. " -e rebuild"))
+-- Dwindle/Master layout column controls
+hl.bind(mainMod .. " + period", hl.dispatch("layoutmsg", "move +col"))
+hl.bind(mainMod .. " + comma", hl.dispatch("layoutmsg", "move -col"))
 
--- Scroll through existing workspaces with mainMod + scroll
-hl.bind(mainMod .. " + mouse_down", hl.dsp.focus({ workspace = "e+1" }))
-hl.bind(mainMod .. " + mouse_up", hl.dsp.focus({ workspace = "e-1" }))
+-- Mouse button workspace navigation (Side buttons 275/276)
+hl.bind(mainMod .. " + mouse:276", hl.dispatch("workspace", "5"))
+hl.bind(mainMod .. " + mouse:275", hl.dispatch("workspace", "6"))
+hl.bind(mainMod .. " + ALT + mouse:275", hl.dispatch("workspace", "7"))
+hl.bind(mainMod .. " + SHIFT + mouse:276", hl.dispatch("movetoworkspace", "5"))
+hl.bind(mainMod .. " + SHIFT + mouse:275", hl.dispatch("movetoworkspace", "6"))
+hl.bind(mainMod .. " + SHIFT + ALT + mouse:275", hl.dispatch("movetoworkspace", "7"))
+hl.bind(mainMod .. " + CTRL + mouse:276", hl.dispatch("movetoworkspacesilent", "5"))
+hl.bind(mainMod .. " + CTRL + mouse:275", hl.dispatch("movetoworkspacesilent", "6"))
+hl.bind(mainMod .. " + CTRL + ALT + mouse:275", hl.dispatch("movetoworkspacesilent", "7"))
 
--- Move active window to a relative workspace with mainMod + CTRL + ALT + [←→]
-hl.bind(mainMod .. " + CTRL + ALT + right", hl.dsp.window.move({ workspace = "r+1" }))
-hl.bind(mainMod .. " + CTRL + ALT + left", hl.dsp.window.move({ workspace = "r-1" }))
+-- Mouse wheel workspace scrolling
+hl.bind(mainMod .. " + mouse_down", hl.dispatch("workspace", "e+1"))
+hl.bind(mainMod .. " + mouse_up", hl.dispatch("workspace", "e-1"))
 
--- Move active window around current workspace with mainMod + SHIFT + CTRL [←→↑↓]
-hl.bind(mainMod .. " + SHIFT + CTRL + left", hl.dsp.window.move({ direction = "l" }))
-hl.bind(mainMod .. " + SHIFT + CTRL + right", hl.dsp.window.move({ direction = "r" }))
-hl.bind(mainMod .. " + SHIFT + CTRL + up", hl.dsp.window.move({ direction = "u" }))
-hl.bind(mainMod .. " + SHIFT + CTRL + down", hl.dsp.window.move({ direction = "d" }))
+-- Move window to relative workspace
+hl.bind(mainMod .. " + CTRL + ALT + right", hl.dispatch("movetoworkspace", "r+1"))
+hl.bind(mainMod .. " + CTRL + ALT + left", hl.dispatch("movetoworkspace", "r-1"))
 
--- Move active window around current workspace with mainMod + SHIFT + CTRL [HLJK]
-hl.bind(mainMod .. " + SHIFT + CTRL + H", hl.dsp.window.move({ direction = "l" }))
-hl.bind(mainMod .. " + SHIFT + CTRL + L", hl.dsp.window.move({ direction = "r" }))
-hl.bind(mainMod .. " + SHIFT + CTRL + K", hl.dsp.window.move({ direction = "u" }))
-hl.bind(mainMod .. " + SHIFT + CTRL + J", hl.dsp.window.move({ direction = "d" }))
+-- Move active window around tiling grid (Arrows)
+hl.bind(mainMod .. " + SHIFT + CTRL + left", hl.dispatch("movewindow", "l"))
+hl.bind(mainMod .. " + SHIFT + CTRL + right", hl.dispatch("movewindow", "r"))
+hl.bind(mainMod .. " + SHIFT + CTRL + up", hl.dispatch("movewindow", "u"))
+hl.bind(mainMod .. " + SHIFT + CTRL + down", hl.dispatch("movewindow", "d"))
 
--- Special workspaces (scratchpad)
-hl.bind(mainMod .. " + CTRL + S", hl.dsp.window.move({ workspace = "special", follow = false }))
-hl.bind(mainMod .. " + ALT + S", hl.dsp.window.move({ workspace = "special", follow = false }))
-hl.bind(mainMod .. " + S", hl.dsp.workspace.toggle_special("special"))
+-- Move active window around tiling grid (HJKL)
+hl.bind(mainMod .. " + SHIFT + CTRL + H", hl.dispatch("movewindow", "l"))
+hl.bind(mainMod .. " + SHIFT + CTRL + L", hl.dispatch("movewindow", "r"))
+hl.bind(mainMod .. " + SHIFT + CTRL + K", hl.dispatch("movewindow", "u"))
+hl.bind(mainMod .. " + SHIFT + CTRL + J", hl.dispatch("movewindow", "d"))
 
--- workspaces 1-10
+-- Special workspace (Scratchpad) management
+hl.bind(mainMod .. " + CTRL + S", hl.dispatch("movetoworkspacesilent", "special"))
+hl.bind(mainMod .. " + ALT + S", hl.dispatch("movetoworkspacesilent", "special"))
+hl.bind(mainMod .. " + S", hl.dispatch("togglespecialworkspace", "special"))
+
+-- Dynamic Workspaces 1-10 generation
 for i = 1, 10 do
-	local key = i % 10
-	hl.bind(mainMod .. " + " .. key, hl.dsp.focus({ workspace = i }))
-	hl.bind(mainMod .. " + SHIFT + " .. key, hl.dsp.window.move({ workspace = i }))
-	hl.bind(mainMod .. " + CTRL + " .. key, hl.dsp.window.move({ workspace = i, follow = false }))
+  local key = i % 10
+  hl.bind(mainMod .. " + " .. key, hl.dispatch("workspace", tostring(i)))
+  hl.bind(mainMod .. " + SHIFT + " .. key, hl.dispatch("movetoworkspace", tostring(i)))
+  hl.bind(mainMod .. " + CTRL + " .. key, hl.dispatch("movetoworkspacesilent", tostring(i)))
 end
+
+-- Inline NixOS system rebuild trigger via standard terminal
+hl.bind(mainMod .. " + U", hl.dispatch("exec", app(term .. " -e rebuild")))

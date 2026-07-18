@@ -2,17 +2,24 @@
   description = "Hyprland Lua Configuration Flake for Home Manager";
 
   inputs = {
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     hyprland.url = "github:hyprwm/Hyprland";
   };
 
-  outputs = { self, hyprland, ... }@inputs: {
+  outputs = { self, nixpkgs, hyprland, ... }@inputs: {
     homeManagerModules.default = { config, lib, pkgs, ... }:
     let
-      hyprlandPkg = hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
-      portalPkg = hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland;
+      system = pkgs.stdenv.hostPlatform.system;
+      hyprlandPkg = hyprland.packages.${system}.hyprland;
+      portalPkg = hyprland.packages.${system}.xdg-desktop-portal-hyprland;
     in
     {
+      imports = [
+        ./spec.nix 
+      ];
+
       home.packages = with pkgs; [
+        uwsm
         pavucontrol
         swappy
         cliphist
@@ -32,7 +39,6 @@
         slurp         # Region selector
         brightnessctl # Hardware control
         playerctl     # Media control
-
       ];
       
       wayland.windowManager.hyprland = {
@@ -61,24 +67,22 @@
       xdg.portal = {
         enable = true;
         extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
-  
         config.common = {
           default = [ "hyprland" "gtk" ];
         };
       }; 
 
-      services.awww.enable = true;
-
       xdg.configFile = {
-      "hypr" = {
-        source = ./lua;
-        recursive = true;
-      };
-    
-      "hypr/icons" = {
-        source = ./icons;
-        recursive = true;
-      };
-    }; 
+        "hypr" = {
+          source = ./lua;
+          recursive = true;
+        };
+      
+        "hypr/icons" = {
+          source = ./icons;
+          recursive = true;
+        };
+      }; 
+    };
   };
 }
