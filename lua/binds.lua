@@ -99,8 +99,8 @@ hl.bind(mainMod .. " + SHIFT", "Q", "exec " .. app("swaync-client -t -sw"))
 hl.bind(mainMod .. " + ALT", "G", "exec " .. app(gamemode))
 
 -- Screenshot & Screen Capture
-hl.bind(mainMod .. " + SHIFT", "R", "exec " .. app(screen_record .. " a"))
-hl.bind(mainMod .. " + CTRL", "R", "exec " .. app(screen_record .. " m"))
+-- hl.bind(mainMod .. " + SHIFT", "R", "exec " .. app(screen_record .. " a"))
+-- hl.bind(mainMod .. " + CTRL", "R", "exec " .. app(screen_record .. " m"))
 hl.bind(mainMod, "P", "exec " .. app(screenshot .. " s"))
 hl.bind(mainMod .. " + CTRL", "P", "exec " .. app(screenshot .. " sf"))
 hl.bind("", "print", "exec " .. app(screenshot .. " m"))
