@@ -16,14 +16,14 @@ hl.env("XCURSOR_SIZE", "24")
 -- ==========================================
 -- MINIMAL AUTOSTART (UWSM Compliant)
 -- ==========================================
-hl.on("hyprland.start", function()
-  hl.exec_cmd(app("nm-applet --indicator"))
-  hl.exec_cmd(app("hyprpolkitagent"))
-
-  -- Clipboard Management
-  hl.exec_cmd(app("wl-paste --type text --watch cliphist store"))
-  hl.exec_cmd(app("wl-paste --type image --watch cliphist store"))
-end)
+-- hl.on("hyprland.start", function()
+--   hl.exec_cmd(app("nm-applet --indicator"))
+--   hl.exec_cmd(app("hyprpolkitagent"))
+--
+--   -- Clipboard Management
+--   hl.exec_cmd(app("wl-paste --type text --watch cliphist store"))
+--   hl.exec_cmd(app("wl-paste --type image --watch cliphist store"))
+-- end)
 
 -- ==========================================
 -- CORE ENGINE CONFIGURATION
