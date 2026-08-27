@@ -15,8 +15,26 @@
     in
     {
       home.packages = [
-        pkgs.ghostty
-        pkgs.firefox
+        pkgs.uwsm
+        pkgs.pavucontrol
+        pkgs.swappy
+        pkgs.cliphist
+        pkgs.pamixer
+        pkgs.hyprsunset
+        pkgs.btop
+        pkgs.hyprpicker
+        pkgs.hyprpolkitagent
+        pkgs.hyprpaper
+        pkgs.hyprlock
+        pkgs.hypridle
+        pkgs.waybar
+        pkgs.wofi
+        pkgs.mako
+        pkgs.wl-clipboard
+        pkgs.grim
+        pkgs.slurp
+        pkgs.brightnessctl
+        pkgs.playerctl
       ];
 
       wayland.windowManager.hyprland = {
@@ -24,19 +42,9 @@
         package = hyprlandPkg;
         portalPackage = portalPkg;
         systemd.enable = false;
-        settings = {
-          "$mod" = "SUPER";
-
-          # Import this module via homeManagerModules.default, then apply with Home Manager.
-          # Available bindings:
-          # - SUPER + Return -> Ghostty
-          # - SUPER + F -> Firefox
-          bind = [
-            "$mod, Return, exec, ${pkgs.ghostty}/bin/ghostty"
-            "$mod, F, exec, ${pkgs.firefox}/bin/firefox"
-          ];
-        };
       };
+
+      xdg.configFile."hypr/hyprland.lua".source = ./lua/hyprland.lua;
     };
   };
 }
