@@ -37,6 +37,109 @@
         pkgs.playerctl
       ];
 
+      programs.waybar = {
+        enable = true;
+        package = pkgs.waybar;
+        settings.main = {
+          layer = "top";
+          position = "bottom";
+          height = 36;
+          spacing = 4;
+          modules-left = [ "hyprland/workspaces" ];
+          modules-center = [ "custom/search" ];
+          modules-right = [ "clock" ];
+
+          "hyprland/workspaces" = {
+            format = "{name}";
+            all-outputs = true;
+            active-only = false;
+            on-click = "activate";
+          };
+
+          "custom/search" = {
+            format = "  Search applications...";
+            tooltip = false;
+            on-click = "uwsm app -- ${pkgs.wofi}/bin/wofi --show drun";
+          };
+
+          clock = {
+            format = "{:%H:%M  %d.%m.%Y}";
+            format-alt = "{:%H:%M:%S  %A, %d %B %Y}";
+            tooltip-format = "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>";
+          };
+        };
+        style = ''
+          * {
+            border: none;
+            border-radius: 0;
+            font-family: "JetBrainsMono Nerd Font", "Noto Sans", sans-serif;
+            font-size: 13px;
+            min-height: 0;
+          }
+
+          window#waybar {
+            background-color: rgba(24, 24, 37, 0.95);
+            color: #cdd6f4;
+            border-top: 1px solid rgba(203, 166, 247, 0.2);
+          }
+
+          #workspaces {
+            margin: 0 4px;
+          }
+
+          #workspaces button {
+            padding: 2px 10px;
+            margin: 3px 2px;
+            border-radius: 6px;
+            color: #a6adc8;
+            background: rgba(49, 50, 68, 0.5);
+            transition: all 0.2s ease;
+          }
+
+          #workspaces button:hover {
+            background: rgba(203, 166, 247, 0.2);
+            color: #cdd6f4;
+          }
+
+          #workspaces button.active {
+            color: #11111b;
+            background: #cba6f7;
+            font-weight: bold;
+          }
+
+          #workspaces button.urgent {
+            background: #f38ba8;
+            color: #11111b;
+          }
+
+          #custom-search {
+            background-color: #313244;
+            color: #a6adc8;
+            padding: 4px 20px;
+            margin: 3px 0;
+            border-radius: 8px;
+            border: 1px solid #45475a;
+            min-width: 260px;
+            transition: all 0.2s ease;
+          }
+
+          #custom-search:hover {
+            background-color: #45475a;
+            color: #cdd6f4;
+            border-color: #cba6f7;
+          }
+
+          #clock {
+            padding: 2px 14px;
+            margin: 3px 6px;
+            background-color: rgba(49, 50, 68, 0.5);
+            color: #cdd6f4;
+            border-radius: 6px;
+            font-weight: 500;
+          }
+        '';
+      };
+
       wayland.windowManager.hyprland = {
         enable = true;
         package = hyprlandPkg;
