@@ -322,3 +322,15 @@ hl.bind(mainMod .. " + Escape", close_all)
 -- KEYBOARD LAYOUT SWITCHING
 -- ==========================================
 hl.bind("", "F24", hl.dsp.exec_cmd("hyprctl switchxkblayout all next"))
+
+-- ==========================================
+-- VIAL KEYBOARD LAYER INDICATOR (MACROS)
+-- ==========================================
+local function set_vial_layer(name)
+  return hl.dsp.exec_cmd(string.format("sh -c 'printf \"%%s\" %s > /tmp/vial_layer && pkill -RTMIN+8 waybar'", name))
+end
+
+hl.bind("", "F20", set_vial_layer("BASE"))
+hl.bind("", "F21", set_vial_layer("LOWER"))
+hl.bind("", "F22", set_vial_layer("RAISE"))
+hl.bind("", "F23", set_vial_layer("ADJUST"))

@@ -38,6 +38,7 @@
         pkgs.breeze-hacked-cursor-theme
         pkgs.telegram-desktop
         pkgs.xdg-desktop-portal-gtk
+        pkgs.procps
       ];
 
       home.sessionVariables = {
@@ -79,7 +80,7 @@
           spacing = 4;
           modules-left = [ "hyprland/workspaces" ];
           modules-center = [ "custom/search" ];
-          modules-right = [ "hyprland/language" "clock" ];
+          modules-right = [ "custom/vial" "hyprland/language" "clock" ];
 
           "hyprland/workspaces" = {
             format = "{name}";
@@ -92,6 +93,14 @@
             format = "  Search applications...";
             tooltip = false;
             on-click = "uwsm app -- ${pkgs.wofi}/bin/wofi --show drun";
+          };
+
+          "custom/vial" = {
+            format = "  {}";
+            exec = "test -s /tmp/vial_layer && cat /tmp/vial_layer || echo 'BASE'";
+            signal = 8;
+            tooltip = true;
+            tooltip-format = "Vial Layer: {}";
           };
 
           "hyprland/language" = {
@@ -168,6 +177,22 @@
             background-color: #45475a;
             color: #cdd6f4;
             border-color: #cba6f7;
+          }
+
+          #custom-vial {
+            padding: 2px 10px;
+            margin: 3px 2px;
+            background-color: rgba(49, 50, 68, 0.5);
+            color: #cdd6f4;
+            border-radius: 6px;
+            font-weight: 500;
+            min-width: 24px;
+            transition: all 0.2s ease;
+          }
+
+          #custom-vial:hover {
+            background-color: rgba(203, 166, 247, 0.2);
+            color: #cdd6f4;
           }
 
           #language {
