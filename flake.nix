@@ -35,6 +35,7 @@
         pkgs.slurp
         pkgs.brightnessctl
         pkgs.playerctl
+        pkgs.breeze-hacked-cursor-theme
       ];
 
       programs.waybar = {
@@ -145,6 +146,16 @@
         package = hyprlandPkg;
         portalPackage = portalPkg;
         systemd.enable = false;
+      };
+
+      home.pointerCursor = {
+        enable = true;
+        package = pkgs.breeze-hacked-cursor-theme;
+        name = "Breeze_Hacked";
+        size = 24;
+        gtk.enable = true;
+        x11.enable = true;
+        hyprcursor.enable = true;
       };
 
       xdg.configFile."hypr/hyprland.lua".source = ./lua/hyprland.lua;

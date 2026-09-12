@@ -5,6 +5,22 @@ local function app(cmd)
   return "uwsm app -- " .. cmd
 end
 
+-- ==========================================
+-- CURSOR CONFIGURATION
+-- ==========================================
+hl.config({
+  cursor = {
+    inactive_timeout = 2,
+    enable_hyprcursor = true,
+    sync_gsettings_theme = true,
+  },
+})
+
+hl.env("XCURSOR_THEME", "Breeze_Hacked")
+hl.env("XCURSOR_SIZE", "24")
+hl.env("HYPRCURSOR_THEME", "Breeze_Hacked")
+hl.env("HYPRCURSOR_SIZE", "24")
+
 -- Helper: Focus nearest matching window or launch application.
 -- If the active window matches, launches a new instance.
 local function is_app(win, class_patterns)
