@@ -140,3 +140,18 @@ hl.bind(mainMod .. " + SHIFT + L", hl.dsp.window.move({ workspace = "r+1" }))
 hl.bind(mainMod .. " + Tab + H", hl.dsp.focus({ workspace = "r-1" }))
 hl.bind(mainMod .. " + Tab + L", hl.dsp.focus({ workspace = "r+1" }))
 
+-- ==========================================
+-- WINDOW CLOSING (SUPER + X close active, SUPER + Escape close all)
+-- ==========================================
+-- Close current active window / application
+hl.bind(mainMod .. " + X", hl.dsp.window.close())
+
+-- Close all windows / applications
+local function close_all()
+  local all_wins = hl.get_windows() or {}
+  for _, w in ipairs(all_wins) do
+    hl.dispatch(hl.dsp.window.close({ window = w }))
+  end
+end
+
+hl.bind(mainMod .. " + Escape", close_all)
