@@ -57,6 +57,13 @@ Vim-style directional window focus:
 | `SUPER + Tab + H` | Switch to previous existing workspace |
 | `SUPER + Tab + L` | Switch to next workspace (creates a new workspace if none exists to the right) |
 
+### Window Closing (`SUPER + X / Escape`)
+
+| Keybinding | Action |
+|---|---|
+| `SUPER + X` | Close current application / active window |
+| `SUPER + Escape` | Close all open applications / windows across workspaces |
+
 ## Usage with Home Manager
 
 Add `nix-hyprland` as an input to your system or Home Manager flake:
