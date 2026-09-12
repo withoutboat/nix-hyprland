@@ -79,7 +79,7 @@
           spacing = 4;
           modules-left = [ "hyprland/workspaces" ];
           modules-center = [ "custom/search" ];
-          modules-right = [ "clock" ];
+          modules-right = [ "hyprland/language" "clock" ];
 
           "hyprland/workspaces" = {
             format = "{name}";
@@ -92,6 +92,15 @@
             format = "  Search applications...";
             tooltip = false;
             on-click = "uwsm app -- ${pkgs.wofi}/bin/wofi --show drun";
+          };
+
+          "hyprland/language" = {
+            format = "{}";
+            format-en = "EN";
+            format-ru = "RU";
+            tooltip = true;
+            tooltip-format = "{long}";
+            on-click = "${hyprlandPkg}/bin/hyprctl switchxkblayout all next";
           };
 
           clock = {
@@ -159,6 +168,22 @@
             background-color: #45475a;
             color: #cdd6f4;
             border-color: #cba6f7;
+          }
+
+          #language {
+            padding: 2px 10px;
+            margin: 3px 2px;
+            background-color: rgba(49, 50, 68, 0.5);
+            color = #cdd6f4;
+            border-radius: 6px;
+            font-weight: 500;
+            min-width: 24px;
+            transition: all 0.2s ease;
+          }
+
+          #language:hover {
+            background-color: rgba(203, 166, 247, 0.2);
+            color = #cdd6f4;
           }
 
           #clock {
