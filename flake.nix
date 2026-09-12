@@ -36,7 +36,38 @@
         pkgs.brightnessctl
         pkgs.playerctl
         pkgs.breeze-hacked-cursor-theme
+        pkgs.telegram-desktop
+        pkgs.xdg-desktop-portal-gtk
       ];
+
+      home.sessionVariables = {
+        NIXOS_OZONE_WL = "1";
+        ELECTRON_OZONE_PLATFORM_HINT = "auto";
+        MOZ_ENABLE_WAYLAND = "1";
+        QT_QPA_PLATFORM = "wayland;xcb";
+        GDK_BACKEND = "wayland,x11,*";
+        SDL_VIDEODRIVER = "wayland";
+        CLUTTER_BACKEND = "wayland";
+        XDG_CURRENT_DESKTOP = "Hyprland";
+        XDG_SESSION_TYPE = "wayland";
+        XDG_SESSION_DESKTOP = "Hyprland";
+      };
+
+      xdg.portal = {
+        enable = true;
+        extraPortals = [
+          pkgs.xdg-desktop-portal-gtk
+          portalPkg
+        ];
+        config = {
+          common = {
+            default = [ "hyprland" "gtk" ];
+          };
+          hyprland = {
+            default = [ "hyprland" "gtk" ];
+          };
+        };
+      };
 
       programs.waybar = {
         enable = true;

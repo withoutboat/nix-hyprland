@@ -1,8 +1,24 @@
 local mainMod = "SUPER"
 
 -- Strict UWSM wrapper for application launching
-local function app(cmd)
+local function app(cmd, app_name)
+  if app_name then
+    return string.format("uwsm app -a %s -- %s", app_name, cmd)
+  end
   return "uwsm app -- " .. cmd
+end
+
+-- Helper to generate a shell command with binary fallbacks (e.g. telegram-desktop vs Telegram)
+local function cmd_fallback(candidates)
+  if type(candidates) == "string" then
+    return candidates
+  end
+  local parts = {}
+  for _, c in ipairs(candidates) do
+    local bin = c:match("^%S+")
+    table.insert(parts, string.format("command -v %s >/dev/null 2>&1 && exec %s", bin, c))
+  end
+  return string.format("sh -c '%s || exec %s'", table.concat(parts, " || "), candidates[1])
 end
 
 -- ==========================================
@@ -20,6 +36,24 @@ hl.env("XCURSOR_THEME", "Breeze_Hacked")
 hl.env("XCURSOR_SIZE", "24")
 hl.env("HYPRCURSOR_THEME", "Breeze_Hacked")
 hl.env("HYPRCURSOR_SIZE", "24")
+
+-- ==========================================
+-- DESKTOP & WAYLAND INTEGRATION
+-- ==========================================
+hl.env("XDG_CURRENT_DESKTOP", "Hyprland")
+hl.env("XDG_SESSION_TYPE", "wayland")
+hl.env("XDG_SESSION_DESKTOP", "Hyprland")
+
+-- Native Wayland for Electron / Chromium apps (Slack, Copilot, etc.)
+hl.env("NIXOS_OZONE_WL", "1")
+hl.env("ELECTRON_OZONE_PLATFORM_HINT", "auto")
+
+-- Toolkit Wayland backends
+hl.env("MOZ_ENABLE_WAYLAND", "1")
+hl.env("QT_QPA_PLATFORM", "wayland;xcb")
+hl.env("GDK_BACKEND", "wayland,x11,*")
+hl.env("SDL_VIDEODRIVER", "wayland")
+hl.env("CLUTTER_BACKEND", "wayland")
 
 -- Helper: Focus nearest matching window or launch application.
 -- If the active window matches, launches a new instance.
@@ -41,11 +75,11 @@ local function is_app(win, class_patterns)
   return false
 end
 
-local function focus_or_launch(cmd, class_patterns)
+local function focus_or_launch(cmd, class_patterns, app_name)
   return function()
     local active = hl.get_active_window()
     if active and is_app(active, class_patterns) then
-      hl.exec_cmd(app(cmd))
+      hl.exec_cmd(app(cmd, app_name))
       return
     end
 
@@ -58,7 +92,7 @@ local function focus_or_launch(cmd, class_patterns)
     end
 
     if #matching_wins == 0 then
-      hl.exec_cmd(app(cmd))
+      hl.exec_cmd(app(cmd, app_name))
       return
     end
 
@@ -107,7 +141,7 @@ local function focus_or_launch(cmd, class_patterns)
     if best_win then
       hl.dispatch(hl.dsp.focus({ window = best_win }))
     else
-      hl.exec_cmd(app(cmd))
+      hl.exec_cmd(app(cmd, app_name))
     end
   end
 end
@@ -116,18 +150,23 @@ end
 -- AUTOSTART
 -- ==========================================
 hl.on("hyprland.start", function()
+  -- Finalize UWSM session & export variables to systemd and D-Bus activation environments.
+  -- This eliminates app startup delays (resolving 10-25s UWSM and xdg-desktop-portal timeouts).
+  hl.exec_cmd("uwsm finalize")
+  hl.exec_cmd("systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP HYPRLAND_INSTANCE_SIGNATURE NIXOS_OZONE_WL ELECTRON_OZONE_PLATFORM_HINT")
+  hl.exec_cmd("dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP HYPRLAND_INSTANCE_SIGNATURE NIXOS_OZONE_WL ELECTRON_OZONE_PLATFORM_HINT")
   hl.exec_cmd(app("waybar"))
 end)
 
 -- ==========================================
 -- APPLICATION LAUNCHERS
 -- ==========================================
-hl.bind(mainMod .. " + Return", focus_or_launch("ghostty", "ghostty"))
-hl.bind(mainMod .. " + F", focus_or_launch("firefox", "firefox"))
-hl.bind(mainMod .. " + S", focus_or_launch("slack", "slack"))
-hl.bind(mainMod .. " + T", focus_or_launch("telegram-desktop", "telegram"))
-hl.bind(mainMod .. " + Z", focus_or_launch("zoom", "zoom"))
-hl.bind(mainMod .. " + G", focus_or_launch("github-copilot", { "github-copilot", "github", "copilot" }))
+hl.bind(mainMod .. " + Return", focus_or_launch("ghostty", "ghostty", "ghostty"))
+hl.bind(mainMod .. " + F", focus_or_launch("firefox", "firefox", "firefox"))
+hl.bind(mainMod .. " + S", focus_or_launch(cmd_fallback({ "slack", "Slack", "flatpak run com.slack.Slack" }), "slack", "slack"))
+hl.bind(mainMod .. " + T", focus_or_launch(cmd_fallback({ "telegram-desktop", "Telegram", "flatpak run org.telegram.desktop" }), { "telegram", "org.telegram.desktop" }, "telegram"))
+hl.bind(mainMod .. " + Z", focus_or_launch(cmd_fallback({ "zoom", "zoom-us", "flatpak run us.zoom.Zoom" }), "zoom", "zoom"))
+hl.bind(mainMod .. " + G", focus_or_launch(cmd_fallback({ "github-copilot", "github-copilot-desktop", "copilot", "flatpak run com.github.copilot" }), { "github-copilot", "github", "copilot" }, "github-copilot"))
 hl.bind(mainMod .. " + Space", hl.dsp.exec_cmd(app("wofi --show drun")))
 
 -- ==========================================

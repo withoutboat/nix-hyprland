@@ -20,9 +20,9 @@ The default modifier (`mainMod`) is `SUPER` (Windows key).
 |---|---|
 | `SUPER + Return` | Ghostty |
 | `SUPER + F` | Firefox |
-| `SUPER + S` | Slack |
-| `SUPER + T` | Telegram (`telegram-desktop`) |
-| `SUPER + Z` | Zoom |
+| `SUPER + S` | Slack (`slack` / `Slack` / Flatpak) |
+| `SUPER + T` | Telegram (`Telegram` / `telegram-desktop` / Flatpak) |
+| `SUPER + Z` | Zoom (`zoom` / `zoom-us` / Flatpak) |
 | `SUPER + G` | GitHub Copilot Desktop |
 | `SUPER + Space` | Application Launcher (`wofi`) |
 
