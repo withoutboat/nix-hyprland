@@ -7,17 +7,28 @@ end
 
 -- Helper: Focus nearest matching window or launch application.
 -- If the active window matches, launches a new instance.
-local function is_app(win, class_pattern)
+local function is_app(win, class_patterns)
   if not win then return false end
   local c = (win.class or ""):lower()
   local ic = (win.initial_class or ""):lower()
-  return c:find(class_pattern) ~= nil or ic:find(class_pattern) ~= nil
+
+  if type(class_patterns) == "string" then
+    class_patterns = { class_patterns }
+  end
+
+  for _, pat in ipairs(class_patterns) do
+    local p = pat:lower()
+    if c:find(p, 1, true) or ic:find(p, 1, true) then
+      return true
+    end
+  end
+  return false
 end
 
-local function focus_or_launch(cmd, class_pattern)
+local function focus_or_launch(cmd, class_patterns)
   return function()
     local active = hl.get_active_window()
-    if active and is_app(active, class_pattern) then
+    if active and is_app(active, class_patterns) then
       hl.exec_cmd(app(cmd))
       return
     end
@@ -25,7 +36,7 @@ local function focus_or_launch(cmd, class_pattern)
     local all_wins = hl.get_windows() or {}
     local matching_wins = {}
     for _, w in ipairs(all_wins) do
-      if is_app(w, class_pattern) and not w.hidden then
+      if is_app(w, class_patterns) and not w.hidden then
         table.insert(matching_wins, w)
       end
     end
@@ -95,8 +106,12 @@ end)
 -- ==========================================
 -- APPLICATION LAUNCHERS
 -- ==========================================
-hl.bind(mainMod .. " + Return", hl.dsp.exec_cmd(app("ghostty")))
+hl.bind(mainMod .. " + Return", focus_or_launch("ghostty", "ghostty"))
 hl.bind(mainMod .. " + F", focus_or_launch("firefox", "firefox"))
+hl.bind(mainMod .. " + S", focus_or_launch("slack", "slack"))
+hl.bind(mainMod .. " + T", focus_or_launch("telegram-desktop", "telegram"))
+hl.bind(mainMod .. " + Z", focus_or_launch("zoom", "zoom"))
+hl.bind(mainMod .. " + G", focus_or_launch("github-copilot", { "github-copilot", "github", "copilot" }))
 hl.bind(mainMod .. " + Space", hl.dsp.exec_cmd(app("wofi --show drun")))
 
 -- ==========================================
