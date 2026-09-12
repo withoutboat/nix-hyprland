@@ -22,13 +22,16 @@ local function cmd_fallback(candidates)
 end
 
 -- ==========================================
--- CURSOR CONFIGURATION
+-- CURSOR & INPUT CONFIGURATION
 -- ==========================================
 hl.config({
   cursor = {
     inactive_timeout = 2,
     enable_hyprcursor = true,
     sync_gsettings_theme = true,
+  },
+  input = {
+    kb_layout = "us,ru",
   },
 })
 
@@ -314,3 +317,8 @@ local function close_all()
 end
 
 hl.bind(mainMod .. " + Escape", close_all)
+
+-- ==========================================
+-- KEYBOARD LAYOUT SWITCHING
+-- ==========================================
+hl.bind("", "F24", hl.dsp.exec_cmd("hyprctl switchxkblayout all next"))

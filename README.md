@@ -5,7 +5,7 @@ Minimal and modular Hyprland Home Manager configuration flake, powered by Hyprla
 ## Features
 
 - **Lua Configuration**: Scriptable configuration via `lua/hyprland.lua` mapped to `~/.config/hypr/hyprland.lua`.
-- **Bottom Waybar**: Clean status bar with workspace indicators on the left, an application search trigger (`wofi`) in the center, and date/time on the right.
+- **Bottom Waybar**: Clean status bar with workspace indicators on the left, an application search trigger (`wofi`) in the center, and keyboard layout indicator (`EN`/`RU` with click-to-switch) and date/time on the right.
 - **Classic Turquoise Cursor**: Classic Breeze arrow cursor theme with bright turquoise/cyan accents (`Breeze_Hacked`), auto-hiding after 2 seconds of inactivity (`cursor:inactive_timeout = 2`).
 - **UWSM Integration**: Applications and status bars are launched through `uwsm app --` for strict session management.
 - **Smart Focus-or-Launch**: Application hotkeys focus the nearest existing window across workspaces or spawn a new instance if already focused.
@@ -64,6 +64,12 @@ Vim-style directional window focus with workspace boundary traversal:
 |---|---|
 | `SUPER + X` | Close current application / active window |
 | `SUPER + Escape` | Close all open applications / windows across workspaces |
+
+### Keyboard Layout Switching
+
+| Keybinding | Action |
+|---|---|
+| `F24` | Switch keyboard layout across all devices (`hyprctl switchxkblayout all next`, cycling between `EN` and `RU`) |
 
 ## Usage with Home Manager
 
