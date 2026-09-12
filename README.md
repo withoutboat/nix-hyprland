@@ -5,7 +5,7 @@ Minimal and modular Hyprland Home Manager configuration flake, powered by Hyprla
 ## Features
 
 - **Lua Configuration**: Scriptable configuration via `lua/hyprland.lua` mapped to `~/.config/hypr/hyprland.lua`.
-- **Bottom Waybar**: Clean status bar with workspace indicators on the left, an application search trigger (`wofi`) in the center, and keyboard layout indicator (`EN`/`RU` with click-to-switch) and date/time on the right.
+- **Bottom Waybar**: Clean status bar with workspace indicators on the left, an application search trigger (`wofi`) in the center, and indicators for Vial keyboard layer (`BASE`/`LOWER`/`RAISE`/`ADJUST`), OS keyboard layout (`EN`/`RU` with click-to-switch), and date/time on the right.
 - **Classic Turquoise Cursor**: Classic Breeze arrow cursor theme with bright turquoise/cyan accents (`Breeze_Hacked`), auto-hiding after 2 seconds of inactivity (`cursor:inactive_timeout = 2`).
 - **UWSM Integration**: Applications and status bars are launched through `uwsm app --` for strict session management.
 - **Smart Focus-or-Launch**: Application hotkeys focus the nearest existing window across workspaces or spawn a new instance if already focused.
@@ -70,6 +70,15 @@ Vim-style directional window focus with workspace boundary traversal:
 | Keybinding | Action |
 |---|---|
 | `F24` | Switch keyboard layout across all devices (`hyprctl switchxkblayout all next`, cycling between `EN` and `RU`) |
+
+### Vial Keyboard Layer Signals (Macros)
+
+| Keybinding | Layer | Action |
+|---|---|---|
+| `F20` | `BASE` | Set active layer to Base (Layer 0) and refresh Waybar indicator |
+| `F21` | `LOWER` | Set active layer to Lower (Layer 1) and refresh Waybar indicator |
+| `F22` | `RAISE` | Set active layer to Raise (Layer 2) and refresh Waybar indicator |
+| `F23` | `ADJUST` | Set active layer to Adjust (Layer 3) and refresh Waybar indicator |
 
 ## Usage with Home Manager
 
