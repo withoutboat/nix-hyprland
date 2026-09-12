@@ -33,14 +33,14 @@ The default modifier (`mainMod`) is `SUPER` (Windows key).
 
 ### Window Focus Navigation
 
-Vim-style directional window focus:
+Vim-style directional window focus with workspace boundary traversal:
 
 | Keybinding | Action |
 |---|---|
 | `SUPER + K` | Focus window up |
 | `SUPER + J` | Focus window down |
-| `SUPER + H` | Focus window left |
-| `SUPER + L` | Focus window right |
+| `SUPER + H` | Focus window left (switches to previous workspace if at the leftmost edge and an existing workspace exists) |
+| `SUPER + L` | Focus window right (switches to next workspace if at the rightmost edge and an existing workspace exists) |
 
 ### Window Dragging & Workspace Migration (`+ SHIFT`)
 
