@@ -170,12 +170,116 @@ hl.bind(mainMod .. " + G", focus_or_launch(cmd_fallback({ "github-copilot", "git
 hl.bind(mainMod .. " + Space", hl.dsp.exec_cmd(app("wofi --show drun")))
 
 -- ==========================================
--- NAVIGATION & FOCUS (jk up/down, hl left/right)
+-- NAVIGATION & FOCUS (jk up/down, hl left/right with workspace boundary traversal)
 -- ==========================================
+local function has_window_in_dir(active, wins, dir)
+  if not active or #wins <= 1 then
+    return false
+  end
+  local ax = (active.at and active.at.x or 0) + (active.size and active.size.x or 0) / 2
+  for _, w in ipairs(wins) do
+    if w.address ~= active.address then
+      local wx = (w.at and w.at.x or 0) + (w.size and w.size.x or 0) / 2
+      if dir == "left" and wx < (ax - 20) then
+        return true
+      elseif dir == "right" and wx > (ax + 20) then
+        return true
+      end
+    end
+  end
+  return false
+end
+
+local function get_adjacent_workspace(current_id, dir)
+  local all_ws = hl.get_workspaces() or {}
+  local prev_id = nil
+  local next_id = nil
+  local min_diff_prev = math.huge
+  local min_diff_next = math.huge
+
+  for _, ws in ipairs(all_ws) do
+    if ws and not ws.special and type(ws.id) == "number" and ws.id > 0 then
+      if ws.id < current_id then
+        local diff = current_id - ws.id
+        if diff < min_diff_prev then
+          min_diff_prev = diff
+          prev_id = ws.id
+        end
+      elseif ws.id > current_id then
+        local diff = ws.id - current_id
+        if diff < min_diff_next then
+          min_diff_next = diff
+          next_id = ws.id
+        end
+      end
+    end
+  end
+
+  if dir == "left" then
+    return prev_id
+  elseif dir == "right" then
+    return next_id
+  end
+  return nil
+end
+
+local function smart_navigate(dir)
+  return function()
+    local active = hl.get_active_window()
+    local active_ws = hl.get_active_workspace()
+    local active_ws_id = (active_ws and type(active_ws.id) == "number") and active_ws.id or 1
+
+    local all_wins = hl.get_windows() or {}
+    local current_wins = {}
+    for _, w in ipairs(all_wins) do
+      local w_ws = w.workspace
+      local w_ws_id = (w_ws and type(w_ws.id) == "number") and w_ws.id or 0
+      local is_same_ws = (w_ws and active_ws and w_ws == active_ws) or (w_ws_id ~= 0 and w_ws_id == active_ws_id)
+      if is_same_ws and not w.hidden then
+        table.insert(current_wins, w)
+      end
+    end
+
+    if active and has_window_in_dir(active, current_wins, dir) then
+      hl.dispatch(hl.dsp.focus({ direction = dir }))
+      return
+    end
+
+    -- Edge reached: switch workspace only if there is an existing workspace in that direction
+    local target_ws = get_adjacent_workspace(active_ws_id, dir)
+    if target_ws then
+      hl.dispatch(hl.dsp.focus({ workspace = tostring(target_ws) }))
+      -- Focus corresponding edge window on target workspace
+      local target_wins = {}
+      for _, w in ipairs(hl.get_windows() or {}) do
+        local w_ws = w.workspace
+        local w_ws_id = (w_ws and type(w_ws.id) == "number") and w_ws.id or 0
+        if w_ws_id == target_ws and not w.hidden then
+          table.insert(target_wins, w)
+        end
+      end
+      if #target_wins > 0 then
+        table.sort(target_wins, function(a, b)
+          local ax = (a.at and a.at.x or 0) + (a.size and a.size.x or 0) / 2
+          local bx = (b.at and b.at.x or 0) + (b.size and b.size.x or 0) / 2
+          return ax < bx
+        end)
+        local edge_win = (dir == "left") and target_wins[#target_wins] or target_wins[1]
+        if edge_win then
+          hl.dispatch(hl.dsp.focus({ window = edge_win }))
+        end
+      end
+    else
+      -- No workspace in that direction: standard directional focus fallback
+      hl.dispatch(hl.dsp.focus({ direction = dir }))
+    end
+  end
+end
+
 hl.bind(mainMod .. " + K", hl.dsp.focus({ direction = "up" }))
 hl.bind(mainMod .. " + J", hl.dsp.focus({ direction = "down" }))
-hl.bind(mainMod .. " + H", hl.dsp.focus({ direction = "left" }))
-hl.bind(mainMod .. " + L", hl.dsp.focus({ direction = "right" }))
+hl.bind(mainMod .. " + H", smart_navigate("left"))
+hl.bind(mainMod .. " + L", smart_navigate("right"))
 
 -- ==========================================
 -- WINDOW DRAGGING / MOVING (+ SHIFT)
@@ -189,11 +293,11 @@ hl.bind(mainMod .. " + SHIFT + H", hl.dsp.window.move({ workspace = "r-1" }))
 hl.bind(mainMod .. " + SHIFT + L", hl.dsp.window.move({ workspace = "r+1" }))
 
 -- ==========================================
--- WORKSPACE NAVIGATION (SUPER + Tab + hl)
+-- WORKSPACE NAVIGATION (SUPER + CTRL + hl)
 -- ==========================================
 -- Switch between workspaces: left to existing, right to next (creates new workspace if none exists)
-hl.bind(mainMod .. " + Tab + H", hl.dsp.focus({ workspace = "r-1" }))
-hl.bind(mainMod .. " + Tab + L", hl.dsp.focus({ workspace = "r+1" }))
+hl.bind(mainMod .. " + CTRL + H", hl.dsp.focus({ workspace = "r-1" }))
+hl.bind(mainMod .. " + CTRL + L", hl.dsp.focus({ workspace = "r+1" }))
 
 -- ==========================================
 -- WINDOW CLOSING (SUPER + X close active, SUPER + Escape close all)
