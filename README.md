@@ -51,12 +51,12 @@ Vim-style directional window focus:
 | `SUPER + SHIFT + H` | Move active window left to existing workspaces |
 | `SUPER + SHIFT + L` | Move active window right to a new created workspace |
 
-### Workspace Switching (`SUPER + Tab + H/L`)
+### Workspace Switching (`SUPER + Ctrl + H/L`)
 
 | Keybinding | Action |
 |---|---|
-| `SUPER + Tab + H` | Switch to previous existing workspace |
-| `SUPER + Tab + L` | Switch to next workspace (creates a new workspace if none exists to the right) |
+| `SUPER + Ctrl + H` | Switch to previous existing workspace |
+| `SUPER + Ctrl + L` | Switch to next workspace (creates a new workspace if none exists to the right) |
 
 ### Window Closing (`SUPER + X / Escape`)
 

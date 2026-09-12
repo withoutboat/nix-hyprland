@@ -189,11 +189,11 @@ hl.bind(mainMod .. " + SHIFT + H", hl.dsp.window.move({ workspace = "r-1" }))
 hl.bind(mainMod .. " + SHIFT + L", hl.dsp.window.move({ workspace = "r+1" }))
 
 -- ==========================================
--- WORKSPACE NAVIGATION (SUPER + Tab + hl)
+-- WORKSPACE NAVIGATION (SUPER + CTRL + hl)
 -- ==========================================
 -- Switch between workspaces: left to existing, right to next (creates new workspace if none exists)
-hl.bind(mainMod .. " + Tab + H", hl.dsp.focus({ workspace = "r-1" }))
-hl.bind(mainMod .. " + Tab + L", hl.dsp.focus({ workspace = "r+1" }))
+hl.bind(mainMod .. " + CTRL + H", hl.dsp.focus({ workspace = "r-1" }))
+hl.bind(mainMod .. " + CTRL + L", hl.dsp.focus({ workspace = "r+1" }))
 
 -- ==========================================
 -- WINDOW CLOSING (SUPER + X close active, SUPER + Escape close all)
