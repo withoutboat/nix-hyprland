@@ -80,7 +80,7 @@
           spacing = 4;
           modules-left = [ "hyprland/workspaces" ];
           modules-center = [ "custom/search" ];
-          modules-right = [ "custom/vial" "hyprland/language" "clock" ];
+          modules-right = [ "custom/vial" "hyprland/language" "cpu" "memory" "clock" ];
 
           "hyprland/workspaces" = {
             format = "{name}";
@@ -110,6 +110,31 @@
             tooltip = true;
             tooltip-format = "{long}";
             on-click = "${hyprlandPkg}/bin/hyprctl switchxkblayout all next";
+          };
+
+          cpu = {
+            interval = 2;
+            format = "  {usage}%";
+            states = {
+              warning = 75;
+              critical = 90;
+            };
+            tooltip = true;
+            tooltip-format = "CPU: {usage}%\nLoad: {load}";
+            on-click = "uwsm app -- ghostty -e btop || ghostty -e btop";
+          };
+
+          memory = {
+            interval = 2;
+            format = "󰍛  {percentage}%  󰾴  {swapPercentage}%";
+            format-alt = "󰍛  {used:0.1f}G/{total:0.1f}G  󰾴  {swapUsed:0.1f}G/{swapTotal:0.1f}G";
+            states = {
+              warning = 75;
+              critical = 90;
+            };
+            tooltip = true;
+            tooltip-format = "RAM: {used:0.1f}GiB / {total:0.1f}GiB ({percentage}%)\nSwap: {swapUsed:0.1f}GiB / {swapTotal:0.1f}GiB ({swapPercentage}%)";
+            on-click = "uwsm app -- ghostty -e btop || ghostty -e btop";
           };
 
           clock = {
@@ -199,7 +224,7 @@
             padding: 2px 10px;
             margin: 3px 2px;
             background-color: rgba(49, 50, 68, 0.5);
-            color = #cdd6f4;
+            color: #cdd6f4;
             border-radius: 6px;
             font-weight: 500;
             min-width: 24px;
@@ -208,7 +233,47 @@
 
           #language:hover {
             background-color: rgba(203, 166, 247, 0.2);
-            color = #cdd6f4;
+            color: #cdd6f4;
+          }
+
+          #cpu,
+          #memory {
+            padding: 2px 10px;
+            margin: 3px 2px;
+            background-color: rgba(49, 50, 68, 0.5);
+            color: #cdd6f4;
+            border-radius: 6px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+          }
+
+          #cpu:hover,
+          #memory:hover {
+            background-color: rgba(203, 166, 247, 0.2);
+            color: #cdd6f4;
+          }
+
+          #cpu.warning,
+          #memory.warning {
+            background-color: rgba(250, 179, 135, 0.35);
+            color: #fab387;
+          }
+
+          #cpu.warning:hover,
+          #memory.warning:hover {
+            background-color: rgba(250, 179, 135, 0.5);
+          }
+
+          #cpu.critical,
+          #memory.critical {
+            background-color: #f38ba8;
+            color: #11111b;
+            font-weight: bold;
+          }
+
+          #cpu.critical:hover,
+          #memory.critical:hover {
+            background-color: #eba0ac;
           }
 
           #clock {
