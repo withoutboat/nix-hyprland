@@ -70,7 +70,7 @@ Vim-style directional window focus with workspace boundary traversal:
 
 | Keybinding | Action |
 |---|---|
-| `F24` | Switch keyboard layout across all devices (`hyprctl switchxkblayout all next`, cycling between `EN` and `RU`) |
+| `F24` / `code:202` | Switch keyboard layout across all devices (`hyprctl switchxkblayout all next`, cycling between `EN` and `RU`) |
 
 ### Screenshots (Zone Selection & UI Editor)
 
@@ -83,12 +83,14 @@ You can also run `screenshot` in terminal or search for **Take Screenshot** in W
 
 ### Vial Keyboard Layer Signals (Macros)
 
-| Keybinding | Layer | Action |
+Under Linux (`xkeyboard-config` / `evdev`), F20-F23 keys typically resolve to XF86 keysyms or raw scancodes. Both symbolic names and direct scancodes are bound to guarantee reliable detection regardless of layout:
+
+| Keybinding / Keysym / Scancode | Layer | Action |
 |---|---|---|
-| `F20` | `BASE` | Set active layer to Base (Layer 0) and refresh Waybar indicator |
-| `F21` | `LOWER` | Set active layer to Lower (Layer 1) and refresh Waybar indicator |
-| `F22` | `RAISE` | Set active layer to Raise (Layer 2) and refresh Waybar indicator |
-| `F23` | `ADJUST` | Set active layer to Adjust (Layer 3) and refresh Waybar indicator |
+| `F20` / `XF86AudioMicMute` / `code:198` | `BASE` | Set active layer to Base (Layer 0) and refresh Waybar indicator |
+| `F21` / `XF86TouchpadToggle` / `code:199` | `LOWER` | Set active layer to Lower (Layer 1) and refresh Waybar indicator |
+| `F22` / `XF86TouchpadOn` / `code:200` | `RAISE` | Set active layer to Raise (Layer 2) and refresh Waybar indicator |
+| `F23` / `XF86TouchpadOff` / `code:201` | `ADJUST` | Set active layer to Adjust (Layer 3) and refresh Waybar indicator |
 
 ## Usage with Home Manager
 
