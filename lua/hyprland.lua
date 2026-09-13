@@ -322,18 +322,33 @@ hl.bind(mainMod .. " + Escape", close_all)
 -- KEYBOARD LAYOUT SWITCHING
 -- ==========================================
 hl.bind("F24", hl.dsp.exec_cmd("hyprctl switchxkblayout all next"))
+hl.bind("code:202", hl.dsp.exec_cmd("hyprctl switchxkblayout all next"))
 
 -- ==========================================
 -- VIAL KEYBOARD LAYER INDICATOR (MACROS)
 -- ==========================================
+-- Standard layer signals are sent via F13-F16 (KEY_F13..KEY_F16 -> scancodes code:191..code:194).
+-- Legacy F20-F23 (XF86 keysyms & scancodes code:198..code:201) are also supported for backwards compatibility:
+-- F13 / code:191 / F20 / code:198 / XF86AudioMicMute (BASE)
+-- F14 / code:192 / F21 / code:199 / XF86TouchpadToggle (LOWER)
+-- F15 / code:193 / F22 / code:200 / XF86TouchpadOn (RAISE)
+-- F16 / code:194 / F23 / code:201 / XF86TouchpadOff (ADJUST)
 local function set_vial_layer(name)
   return hl.dsp.exec_cmd(string.format("sh -c 'printf \"%%s\" %s > /tmp/vial_layer && pkill -RTMIN+8 waybar'", name))
 end
 
-hl.bind("F20", set_vial_layer("BASE"))
-hl.bind("F21", set_vial_layer("LOWER"))
-hl.bind("F22", set_vial_layer("RAISE"))
-hl.bind("F23", set_vial_layer("ADJUST"))
+local vial_layers = {
+  { keys = { "F13", "code:191", "F20", "XF86AudioMicMute", "code:198" }, layer = "BASE" },
+  { keys = { "F14", "code:192", "F21", "XF86TouchpadToggle", "code:199" }, layer = "LOWER" },
+  { keys = { "F15", "code:193", "F22", "XF86TouchpadOn", "code:200" }, layer = "RAISE" },
+  { keys = { "F16", "code:194", "F23", "XF86TouchpadOff", "code:201" }, layer = "ADJUST" },
+}
+
+for _, entry in ipairs(vial_layers) do
+  for _, key in ipairs(entry.keys) do
+    hl.bind(key, set_vial_layer(entry.layer))
+  end
+end
 
 -- ==========================================
 -- SCREENSHOTS (Interactive UI zone selection & Swappy editor)

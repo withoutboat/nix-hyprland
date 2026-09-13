@@ -70,7 +70,7 @@ Vim-style directional window focus with workspace boundary traversal:
 
 | Keybinding | Action |
 |---|---|
-| `F24` | Switch keyboard layout across all devices (`hyprctl switchxkblayout all next`, cycling between `EN` and `RU`) |
+| `F24` / `code:202` | Switch keyboard layout across all devices (`hyprctl switchxkblayout all next`, cycling between `EN` and `RU`) |
 
 ### Screenshots (Zone Selection & UI Editor)
 
@@ -83,12 +83,14 @@ You can also run `screenshot` in terminal or search for **Take Screenshot** in W
 
 ### Vial Keyboard Layer Signals (Macros)
 
-| Keybinding | Layer | Action |
+Layer signals are primarily sent using `F13`–`F16` (`code:191`..`code:194`). Legacy mappings for `F20`–`F23` (resolving under Linux `evdev`/`xkeyboard-config` to `XF86AudioMicMute`, `XF86TouchpadToggle`, `XF86TouchpadOn`, `XF86TouchpadOff` or `code:198`..`code:201`) are also preserved for backward compatibility:
+
+| Keybinding / Keysym / Scancode | Layer | Action |
 |---|---|---|
-| `F20` | `BASE` | Set active layer to Base (Layer 0) and refresh Waybar indicator |
-| `F21` | `LOWER` | Set active layer to Lower (Layer 1) and refresh Waybar indicator |
-| `F22` | `RAISE` | Set active layer to Raise (Layer 2) and refresh Waybar indicator |
-| `F23` | `ADJUST` | Set active layer to Adjust (Layer 3) and refresh Waybar indicator |
+| `F13` / `code:191` *(legacy: `F20` / `XF86AudioMicMute` / `code:198`)* | `BASE` | Set active layer to Base (Layer 0) and refresh Waybar indicator |
+| `F14` / `code:192` *(legacy: `F21` / `XF86TouchpadToggle` / `code:199`)* | `LOWER` | Set active layer to Lower (Layer 1) and refresh Waybar indicator |
+| `F15` / `code:193` *(legacy: `F22` / `XF86TouchpadOn` / `code:200`)* | `RAISE` | Set active layer to Raise (Layer 2) and refresh Waybar indicator |
+| `F16` / `code:194` *(legacy: `F23` / `XF86TouchpadOff` / `code:201`)* | `ADJUST` | Set active layer to Adjust (Layer 3) and refresh Waybar indicator |
 
 ## Usage with Home Manager
 
