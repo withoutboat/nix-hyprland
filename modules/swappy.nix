@@ -2,7 +2,6 @@
 
 let
   cfg = config.programs.swappy;
-  iniFormat = pkgs.formats.ini { };
 
   screenshotScript = pkgs.writeShellScriptBin "screenshot" ''
     mkdir -p "$HOME/Pictures/Screenshots"
@@ -36,35 +35,6 @@ let
   };
 in
 {
-  options.programs.swappy = {
-    enable = lib.mkEnableOption "Swappy Wayland screenshot editing tool";
-
-    package = lib.mkPackageOption pkgs "swappy" { };
-
-    settings = lib.mkOption {
-      type = iniFormat.type;
-      default = { };
-      description = ''
-        Configuration written to {file}`$XDG_CONFIG_HOME/swappy/config`.
-      '';
-      example = lib.literalExpression ''
-        {
-          Default = {
-            save_dir = "$HOME/Pictures/Screenshots";
-            save_filename_format = "screenshot-%Y%m%d-%H%M%S.png";
-            show_panel = true;
-            line_size = 5;
-            text_size = 20;
-            text_font = "sans-serif";
-            paint_mode = "brush";
-            early_exit = true;
-            fill_shape = false;
-          };
-        }
-      '';
-    };
-  };
-
   config = lib.mkIf cfg.enable {
     programs.swappy.settings = {
       Default = {
@@ -81,15 +51,11 @@ in
     };
 
     home.packages = [
-      cfg.package
       screenshotScript
       screenshotDesktop
       pkgs.grim
       pkgs.slurp
       pkgs.wl-clipboard
     ];
-
-    xdg.configFile."swappy/config".source =
-      iniFormat.generate "swappy-config" cfg.settings;
   };
 }
