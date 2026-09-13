@@ -7,39 +7,43 @@
   };
 
   outputs = { self, nixpkgs, hyprland, ... }@inputs: {
-    homeManagerModules.default = { pkgs, ... }:
-    let
-      system = pkgs.stdenv.hostPlatform.system;
-      hyprlandPkg = hyprland.packages.${system}.hyprland;
-      portalPkg = hyprland.packages.${system}.xdg-desktop-portal-hyprland;
-    in
-    {
-      home.packages = [
-        pkgs.uwsm
-        pkgs.pavucontrol
-        pkgs.swappy
-        pkgs.cliphist
-        pkgs.pamixer
-        pkgs.hyprsunset
-        pkgs.btop
-        pkgs.hyprpicker
-        pkgs.hyprpolkitagent
-        pkgs.hyprpaper
-        pkgs.hyprlock
-        pkgs.hypridle
-        pkgs.waybar
-        pkgs.wofi
-        pkgs.mako
-        pkgs.wl-clipboard
-        pkgs.grim
-        pkgs.slurp
-        pkgs.brightnessctl
-        pkgs.playerctl
-        pkgs.breeze-hacked-cursor-theme
-        pkgs.telegram-desktop
-        pkgs.xdg-desktop-portal-gtk
-        pkgs.procps
-      ];
+    homeManagerModules = {
+      swappy = import ./modules/swappy.nix;
+      default = { pkgs, ... }:
+      let
+        system = pkgs.stdenv.hostPlatform.system;
+        hyprlandPkg = hyprland.packages.${system}.hyprland;
+        portalPkg = hyprland.packages.${system}.xdg-desktop-portal-hyprland;
+      in
+      {
+        imports = [
+          ./modules/swappy.nix
+        ];
+
+        programs.swappy.enable = true;
+
+        home.packages = [
+          pkgs.uwsm
+          pkgs.pavucontrol
+          pkgs.cliphist
+          pkgs.pamixer
+          pkgs.hyprsunset
+          pkgs.btop
+          pkgs.hyprpicker
+          pkgs.hyprpolkitagent
+          pkgs.hyprpaper
+          pkgs.hyprlock
+          pkgs.hypridle
+          pkgs.waybar
+          pkgs.wofi
+          pkgs.mako
+          pkgs.brightnessctl
+          pkgs.playerctl
+          pkgs.breeze-hacked-cursor-theme
+          pkgs.telegram-desktop
+          pkgs.xdg-desktop-portal-gtk
+          pkgs.procps
+        ];
 
       home.sessionVariables = {
         NIXOS_OZONE_WL = "1";
@@ -307,4 +311,5 @@
       xdg.configFile."hypr/hyprland.lua".source = ./lua/hyprland.lua;
     };
   };
+};
 }

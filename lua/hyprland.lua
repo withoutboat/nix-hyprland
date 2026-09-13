@@ -321,7 +321,7 @@ hl.bind(mainMod .. " + Escape", close_all)
 -- ==========================================
 -- KEYBOARD LAYOUT SWITCHING
 -- ==========================================
-hl.bind("", "F24", hl.dsp.exec_cmd("hyprctl switchxkblayout all next"))
+hl.bind("F24", hl.dsp.exec_cmd("hyprctl switchxkblayout all next"))
 
 -- ==========================================
 -- VIAL KEYBOARD LAYER INDICATOR (MACROS)
@@ -330,7 +330,24 @@ local function set_vial_layer(name)
   return hl.dsp.exec_cmd(string.format("sh -c 'printf \"%%s\" %s > /tmp/vial_layer && pkill -RTMIN+8 waybar'", name))
 end
 
-hl.bind("", "F20", set_vial_layer("BASE"))
-hl.bind("", "F21", set_vial_layer("LOWER"))
-hl.bind("", "F22", set_vial_layer("RAISE"))
-hl.bind("", "F23", set_vial_layer("ADJUST"))
+hl.bind("F20", set_vial_layer("BASE"))
+hl.bind("F21", set_vial_layer("LOWER"))
+hl.bind("F22", set_vial_layer("RAISE"))
+hl.bind("F23", set_vial_layer("ADJUST"))
+
+-- ==========================================
+-- SCREENSHOTS (Interactive UI zone selection & Swappy editor)
+-- ==========================================
+local screenshot_cmd = [[sh -c 'GEOM=$(slurp -d -b 1e1e2ecc -c cba6f7ff -s cba6f733) && [ -n "$GEOM" ] && grim -g "$GEOM" - | swappy -f -']]
+local screenshot_copy_cmd = [[sh -c 'GEOM=$(slurp -d -b 1e1e2ecc -c cba6f7ff -s cba6f733) && [ -n "$GEOM" ] && grim -g "$GEOM" - | wl-copy -t image/png']]
+
+hl.bind("Print", hl.dsp.exec_cmd(app(screenshot_cmd, "swappy")))
+hl.bind(mainMod .. " + SHIFT + S", hl.dsp.exec_cmd(app(screenshot_cmd, "swappy")))
+hl.bind(mainMod .. " + Print", hl.dsp.exec_cmd(app(screenshot_copy_cmd, "grim")))
+
+hl.window_rule({
+  name = "swappy-float",
+  match = { class = "swappy" },
+  float = true,
+  center = true,
+})
