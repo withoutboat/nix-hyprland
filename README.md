@@ -105,8 +105,26 @@ Add `nix-hyprland` as an input to your system or Home Manager flake:
   outputs = { self, nixpkgs, home-manager, nix-hyprland, ... }: {
     # In your Home Manager configuration:
     homeModules = [
-      nix-hyprland.homeManagerModules.default
+      nix-hyprland.homeManagerModules.default # includes swappy and Hyprland integration
     ];
+  };
+}
+```
+
+You can also import and configure `programs.swappy` standalone:
+
+```nix
+{
+  imports = [
+    nix-hyprland.homeManagerModules.swappy
+  ];
+
+  programs.swappy = {
+    enable = true;
+    settings.Default = {
+      save_dir = "$HOME/Pictures/Screenshots";
+      early_exit = true;
+    };
   };
 }
 ```
