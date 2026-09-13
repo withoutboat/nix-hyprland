@@ -12,9 +12,42 @@
       system = pkgs.stdenv.hostPlatform.system;
       hyprlandPkg = hyprland.packages.${system}.hyprland;
       portalPkg = hyprland.packages.${system}.xdg-desktop-portal-hyprland;
+
+      screenshotScript = pkgs.writeShellScriptBin "screenshot" ''
+        mkdir -p "$HOME/Pictures/Screenshots"
+        case "$1" in
+          --full)
+            ${pkgs.grim}/bin/grim - | ${pkgs.swappy}/bin/swappy -f -
+            ;;
+          --clipboard|--copy|-c)
+            GEOM=$(${pkgs.slurp}/bin/slurp -d -b 1e1e2ecc -c cba6f7ff -s cba6f733)
+            if [ -n "$GEOM" ]; then
+              ${pkgs.grim}/bin/grim -g "$GEOM" - | ${pkgs.wl-clipboard}/bin/wl-copy -t image/png
+            fi
+            ;;
+          *)
+            GEOM=$(${pkgs.slurp}/bin/slurp -d -b 1e1e2ecc -c cba6f7ff -s cba6f733)
+            if [ -n "$GEOM" ]; then
+              ${pkgs.grim}/bin/grim -g "$GEOM" - | ${pkgs.swappy}/bin/swappy -f -
+            fi
+            ;;
+        esac
+      '';
+
+      screenshotDesktop = pkgs.makeDesktopItem {
+        name = "screenshot";
+        desktopName = "Take Screenshot";
+        genericName = "Screenshot Tool";
+        comment = "Select a region and annotate or save screenshot";
+        exec = "${screenshotScript}/bin/screenshot";
+        icon = "camera-photo";
+        categories = [ "Utility" ];
+      };
     in
     {
       home.packages = [
+        screenshotScript
+        screenshotDesktop
         pkgs.uwsm
         pkgs.pavucontrol
         pkgs.swappy
@@ -305,6 +338,19 @@
       };
 
       xdg.configFile."hypr/hyprland.lua".source = ./lua/hyprland.lua;
+
+      xdg.configFile."swappy/config".text = ''
+        [Default]
+        save_dir=$HOME/Pictures/Screenshots
+        save_filename_format=screenshot-%Y%m%d-%H%M%S.png
+        show_panel=true
+        line_size=5
+        text_size=20
+        text_font=sans-serif
+        paint_mode=brush
+        early_exit=true
+        fill_shape=false
+      '';
     };
   };
 }

@@ -9,6 +9,7 @@ Minimal and modular Hyprland Home Manager configuration flake, powered by Hyprla
 - **Classic Turquoise Cursor**: Classic Breeze arrow cursor theme with bright turquoise/cyan accents (`Breeze_Hacked`), auto-hiding after 2 seconds of inactivity (`cursor:inactive_timeout = 2`).
 - **UWSM Integration**: Applications and status bars are launched through `uwsm app --` for strict session management.
 - **Smart Focus-or-Launch**: Application hotkeys focus the nearest existing window across workspaces or spawn a new instance if already focused.
+- **Interactive Screenshots**: Area selection via `slurp` with dimension overlays and full editing UI via `swappy` (arrows, text, blur, crop, copy, save).
 
 ## Keybindings
 
@@ -70,6 +71,15 @@ Vim-style directional window focus with workspace boundary traversal:
 | Keybinding | Action |
 |---|---|
 | `F24` | Switch keyboard layout across all devices (`hyprctl switchxkblayout all next`, cycling between `EN` and `RU`) |
+
+### Screenshots (Zone Selection & UI Editor)
+
+| Keybinding | Action |
+|---|---|
+| `Print` or `SUPER + SHIFT + S` | Interactive zone selection (`slurp`) with Swappy editor UI (crop, draw, text, blur, copy, save) |
+| `SUPER + Print` | Quick zone selection (`slurp`) copied directly to clipboard (`wl-copy`) |
+
+You can also run `screenshot` in terminal or search for **Take Screenshot** in Wofi (`SUPER + Space`).
 
 ### Vial Keyboard Layer Signals (Macros)
 
